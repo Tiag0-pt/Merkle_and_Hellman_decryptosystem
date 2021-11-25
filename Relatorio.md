@@ -1,3 +1,4 @@
+(As expressões entre $$ estão em Latex, depois passo para word)
  --- 
  ## Introdução
  ---
