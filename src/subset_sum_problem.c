@@ -148,12 +148,14 @@ int main(void)
     //
     // for each sum
     //
+    printf("Linha %d \n",n);
     for(j = 0;j < n_sums;j++)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
       double t = applly_brute_force(n,p,desired_sum);
       // printf(" ---> %lf s \n",t); - regular print
-      printf("%lf\t",t); // matlab print
+      
+      printf("%lf ",t); // matlab print
     }
 
     printf("\n"); // matlab print
