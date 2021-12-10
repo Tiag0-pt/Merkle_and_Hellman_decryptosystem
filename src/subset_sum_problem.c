@@ -19,7 +19,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "includes/elapsed_time.h"
+#include "../inc/elapsed_time.h"
+#include "../inc/functions.h"
 #include STUDENT_H_FILE
 
 //
@@ -56,75 +57,6 @@
 //
 // main program
 //
-int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t partial_sum, int b[n])
-
-// verifica valida cada bit dos dados encriptados comforme a soma parcial atá chegar á soma desejada
-{
-  int i;
-  if (partial_sum == desired_sum)
-  {
-    for (i = idx; i < n; i++)
-    {
-      b[i] = 0; // mete o resto da chave a zero
-    }
-    return 1;
-  }
-  if (idx == n)
-  {
-    return 0;
-  }
-
-  b[idx] = 0;
-  int r=brute_force(n, p, desired_sum, idx + 1, partial_sum /* + p[idx]*b[idx] */, b);
-  if (r!=0)
-  {
-    return r;
-  }
-  b[idx] = 1;
-  r=brute_force(n, p, desired_sum, idx + 1, partial_sum + p[idx] /* + p[idx]*b[idx] */, b)!=0;
-  return r;
-
-}
-
-// função auxiliar
-double applly_brute_force(int n, integer_t p[n],integer_t  desired_sum)
-{
-  double t;
-  int b[n];
-  int i;
-  integer_t sum = 0;
-  t = cpu_time();
-  if (brute_force(n,p,desired_sum,0,sum,b)==0){
-    fprintf(stderr,"MERDA\n");
-
-  }
-  // verificação
-  for (i = 0;i<n; i++){
-    if(b[i]==1){
-      sum += p[i];
-      
-    }
-    // printf("%d",b[i]);
-  }
-
-  if(sum != desired_sum){
-      fprintf(stderr,"Merda^2\n");
-      exit(1);
-    }
-   return cpu_time() - t;
-}
-
-
-/* int all_sums_rec(p,n,nivel,partial_sum,desired_sum,mask){
-  if(partial_sum== desired_sum){
-    return 1;
-  }
-  else{
-    if(all_sums_rec(p,n,nivel+1,partial_sum + p[nivel],desired_sum,(mask << 1)|1)){
-      return 1;
-    }
-    all_sums_rec(p,n,nivel + 1 ),partial_sum,desired_sum,mask << 1 | 0);
-  } */
 int main(void)
 {
   fprintf(stderr, "Program configuration:\n");
@@ -138,30 +70,27 @@ int main(void)
   //
   int i;
   int j;
-  for( i = 0;i < n_problems;i++)
+  for (i = 0; i < n_problems; i++)
   {
     int n = all_subset_sum_problems[i].n;
-     // the value of n
-    if(n > max_n)
-      break; // skip large values of n
+    // the value of n
+    if (n > max_n)
+      break;                                     // skip large values of n
     integer_t *p = all_subset_sum_problems[i].p; // the weights
     //
     // for each sum
     //
-    printf("Linha %d \n",n);
-    for(j = 0;j < n_sums;j++)
+    printf("Linha %d \n", n);
+    for (j = 0; j < n_sums; j++)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
-      double t = applly_brute_force(n,p,desired_sum);
+      double t = applly_brute_force(n, p, desired_sum);
       // printf(" ---> %lf s \n",t); - regular print
-      
-      printf("%lf ",t); // matlab print
+
+      printf("%lf ", t); // matlab print
     }
 
     printf("\n"); // matlab print
-    
-
-  
-}
-return 0;
+  }
+  return 0;
 }
