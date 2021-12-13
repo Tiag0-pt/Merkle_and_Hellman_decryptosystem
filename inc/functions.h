@@ -33,20 +33,13 @@ int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
-int hs(int n, int p[n], int desired_sum, int b[n])
+int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
 {
-    int compare_int(const void *a, const void *b)
-    {return (*(int *)a - *(int *)b);}
-
-    int impar = 0; // 1 - even ; 0 - uneven
-    if (n % 2 != 0)
-    {
-        impar = 1;
-    }
-    int upper[1 << (n / 2 + impar)];
-    int total_sums = 1 << (n / 2);
-    int i, j, sum_upper, sum_lower;
-    int lower[total_sums];
+    int impar = (n % 2) == 0;
+    integer_t upper[1 << (n / 2 + impar)];
+    long long int total_sums = 1 << (n / 2);
+    long long int i, j, sum_upper, sum_lower;
+    integer_t lower[total_sums];
 
     // lower array
 
@@ -72,7 +65,7 @@ int hs(int n, int p[n], int desired_sum, int b[n])
         // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
         lower[i] = sum_lower;
     }
-    qsort(lower, total_sums, sizeof(int), compare_int);
+    qsort(lower, total_sums, sizeof(integer_t), compare_int);
 
     // Upper array
 
@@ -94,9 +87,10 @@ int hs(int n, int p[n], int desired_sum, int b[n])
             // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
             upper[i] = sum_upper;
           
-        }
-    }else{
-        total_sums <<= 1;
+    }
+    }else
+    {
+        total_sums <<= impar;
         for (i = 0; i < total_sums; i++)
         {
             sum_upper = 0;
@@ -113,7 +107,7 @@ int hs(int n, int p[n], int desired_sum, int b[n])
         }
     }
 
-    qsort(upper, total_sums, sizeof(int), compare_int);
+    qsort(upper, total_sums, sizeof(integer_t), compare_int);
     i = 0;
     j = total_sums-1;
 
@@ -127,8 +121,11 @@ int hs(int n, int p[n], int desired_sum, int b[n])
              continue;
          }
          j--;
-     }
+    }
+    brute_force(n,p,lower[i],0,0,b);
+    brute_force(n,p+(n/2),upper[j],0,0,b+(n/2));
     return 0;
+
 }
 
 

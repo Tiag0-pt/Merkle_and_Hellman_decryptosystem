@@ -76,11 +76,11 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
 int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
 {
-    int impar = n % 2;
-    int upper[1 << (n / 2 + impar)];
-    int total_sums = 1 << (n / 2);
-    int i, j, sum_upper, sum_lower;
-    int lower[total_sums];
+    int impar = (n % 2) == 0;
+    integer_t upper[1 << (n / 2 + impar)];
+    long long int total_sums = 1 << (n / 2);
+    long long int i, j, sum_upper, sum_lower;
+    integer_t lower[total_sums];
 
     // lower array
 
@@ -106,7 +106,7 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
         // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
         lower[i] = sum_lower;
     }
-    qsort(lower, total_sums, sizeof(int), compare_int);
+    qsort(lower, total_sums, sizeof(integer_t), compare_int);
 
     // Upper array
 
@@ -131,7 +131,7 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
     }
     }else
     {
-        total_sums <<= 1;
+        total_sums <<= impar;
         for (i = 0; i < total_sums; i++)
         {
             sum_upper = 0;
@@ -148,7 +148,7 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
         }
     }
 
-    qsort(upper, total_sums, sizeof(int), compare_int);
+    qsort(upper, total_sums, sizeof(integer_t), compare_int);
     i = 0;
     j = total_sums-1;
 
@@ -163,8 +163,14 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
          }
          j--;
     }
-    printf("i=%d j=%d",i,j);
+    brute_force(n,p,lower[i],0,0,b);
+    brute_force(n,p+(n/2),upper[j],0,0,b+(n/2));
     return 0;
+
+    // debuging notes
+    /* long long int + int : ok
+       unsigned long long + int : ok
+       long long int + unsigned long long */
 }
 
 int main(int argc, char *argv[])
@@ -172,7 +178,7 @@ int main(int argc, char *argv[])
     integer_t p[] = {1, 3, 5, 7, 11, 13, 29, 31,46};
     int n = sizeof(p) / sizeof(integer_t);
     integer_t sum = 14;
-    // 1 + 14
+    // 1 + 13
     int b[n];
     hs(n, p, sum, b);
     return 0;
