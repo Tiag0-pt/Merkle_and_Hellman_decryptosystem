@@ -96,12 +96,14 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
 
 int compare_int(const void *a, const void *b)
 {
-    return (*(integer_t *)a - *(integer_t *)b);
+    if (*(integer_t*)a>*(integer_t*)b) return 1;
+    if (*(integer_t*)a<*(integer_t*)b) return -1;
+    return 0;
 }
 
-void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
-    long long int total_sums = 1 << n;
-    long long int i,j,sum;
+void make_sums(int n,integer_t p[n],integer_t sums[n]){
+    integer_t total_sums = 1 << n;
+    integer_t i,j,sum;
     for(i = 0; i<total_sums;i++){
         sum = 0;
         for(j = 0; j<n ;j++){
@@ -115,6 +117,11 @@ void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
     qsort(sums,total_sums,sizeof(integer_t),compare_int);
 }
 
+void print_arr(integer_t* arr, integer_t n) {
+    for (integer_t i = 0; i < n; i++) {
+        printf("%lld ", arr[i]);
+    }
+}
 
 void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
@@ -137,6 +144,7 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
              continue;
          }
          j--;
+
     }
 
     brute_force_recursive(n1,p,lower[i],0,0,b);

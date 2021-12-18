@@ -78,11 +78,12 @@ int main(void)
     // for each sum
     //
     printf("n = %d\n",n);
-    for(int j = 0;j < n_sums;j++)
+    for(int j = 1;j < n_sums;j++)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
       int b[n]; // array to record the solution
-      brute_force_iterative(n,p,desired_sum,b);
+      //brute_force_iterative(n,p,desired_sum,b);
+      hs(n,p,desired_sum,b);
       for(int l = 0;l<n;l++){
         printf("%d",b[l]);
       }
