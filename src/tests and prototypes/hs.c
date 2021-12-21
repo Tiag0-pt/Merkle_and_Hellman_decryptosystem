@@ -12,7 +12,7 @@ typedef unsigned long long integer_t;
 
 int compare_int(const void *a, const void *b)
 {
-    return (*(int *)a - *(int *)b);
+    return (*(integer_t *)a - *(integer_t *)b);
 }
 
 int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t partial_sum, int b[n]){// verifica valida cada bit dos dados encriptados comforme a soma parcial atá chegar á soma desejada
@@ -76,7 +76,7 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
 int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
 {
-    int impar = (n % 2) == 0;
+    int impar = ! (n % 2) == 0;
     integer_t upper[1 << (n / 2 + impar)];
     long long int total_sums = 1 << (n / 2);
     long long int i, j, sum_upper, sum_lower;
@@ -163,8 +163,8 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
          }
          j--;
     }
-    brute_force(n,p,lower[i],0,0,b);
-    brute_force(n,p+(n/2),upper[j],0,0,b+(n/2));
+    brute_force(n/2,p,lower[i],0,0,b);
+    brute_force(n/2,p+(n/2),upper[j],0,0,b+(n/2));
     return 0;
 
     // debuging notes
@@ -175,11 +175,85 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
 
 int main(int argc, char *argv[])
 {
-    integer_t p[] = {1, 3, 5, 7, 11, 13, 29, 31,46};
+    
+    integer_t sum;
+    integer_t p[] = {
+      // p[] -- chave publica
+      (integer_t)234ull,
+      (integer_t)429ull,
+      (integer_t)769ull,
+      (integer_t)835ull,
+      (integer_t)858ull,
+      (integer_t)874ull,
+      (integer_t)998ull,
+      (integer_t)1200ull,
+      (integer_t)1592ull,
+      (integer_t)1655ull
+    };
     int n = sizeof(p) / sizeof(integer_t);
-    integer_t sum = 14;
-    // 1 + 13
     int b[n];
-    hs(n, p, sum, b);
+
+     integer_t desired_sums[] = { 
+      // (integer_t) C' // mensagem original
+      (integer_t)5963ull, // 0111111100
+                          // 0111111100
+      (integer_t)5105ull, // 0111011100
+                          // 0111011100
+      (integer_t)4376ull, // 1100100101
+                          // 1100100101
+      (integer_t)5339ull, // 1111011100
+                          // 1111011100
+      (integer_t)7840ull, // 1100111111
+                          // 1100111111
+      (integer_t)4367ull, // 1011010001
+                          // 1011010001  
+      (integer_t)5161ull, // 1110010101
+                          // 1110010101
+      (integer_t)4219ull, // 0100001110
+                          // 0100001110
+      (integer_t)4430ull, // 1101110100
+                          // 1101110100
+      (integer_t)1432ull, // 1110000000
+                          // 1110000000
+      (integer_t)7411ull, // 1000111111
+                          // 1000111111
+      (integer_t)5319ull, // 0110010011
+                          // 0110010011
+      (integer_t)3120ull, // 0101101000
+                          // 0101101000
+      (integer_t)8180ull, // 1010111111
+                          // 1010111111
+      (integer_t)2356ull, // 1101100000
+                          // 1101100000
+      (integer_t)4533ull, // 1001011010
+                          // 1001011010
+      (integer_t)6138ull, // 0111100011
+                          // 0111100011
+      (integer_t)5174ull, // 1001100011
+                          // 1001100011
+      (integer_t)3930ull, // 0000111100
+                          // 0000111100
+      (integer_t)769ull // 0010000000
+                        // 0010000000
+    };
+    
+
+    for (int j =0;j<20;j++){
+      sum = desired_sums[j];
+      hs(n, p, sum, b);
+      printf(" soma %d ",j);
+      for(int i = 0;i<n;i++){
+        printf("%d",b[i]);
+      } 
+    }
     return 0;
+
+    /* // comment here
+    sum = 5963ull;
+    hs(n, p, sum, b);
+    for(int i = 0;i<n;i++){
+        printf("%d",b[i]);
+    }
+    return 0;
+    // to here */
 }

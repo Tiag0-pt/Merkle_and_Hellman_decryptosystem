@@ -32,6 +32,10 @@ int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+int compare_int(const void *a, const void *b)
+{
+    return (*(integer_t *)a - *(integer_t *)b);
+}
 
 int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
 {
@@ -124,6 +128,7 @@ int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
     }
     brute_force(n,p,lower[i],0,0,b);
     brute_force(n,p+(n/2),upper[j],0,0,b+(n/2));
+    
     return 0;
 
 }
@@ -178,8 +183,6 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
     }
 }
 
- int compare_int(const void *a, const void *b)
-    {return (*(int *)a - *(int *)b);}
 
 
 
