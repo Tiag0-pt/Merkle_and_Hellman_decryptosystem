@@ -2,11 +2,17 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 #include "functions.h"
-
-
+#include <string.h>
 typedef unsigned long long integer_t;
 
-int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t partial_sum, int b[n]){// verifica valida cada bit dos dados encriptados comforme a soma parcial atá chegar á soma desejada
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+/*Brute Force*/
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+
+int brute_force_recursive(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t partial_sum, int b[n]){// verifica valida cada bit dos dados encriptados comforme a soma parcial atá chegar á soma desejada
   int i;
   if (partial_sum == desired_sum)
   {
@@ -21,124 +27,37 @@ int brute_force(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t
     return 0;
   }
   b[idx] = 0;
-  int r = brute_force(n, p, desired_sum, idx + 1, partial_sum /* + p[idx]*b[idx] */, b);
+  int r = brute_force_recursive(n, p, desired_sum, idx + 1, partial_sum /* + p[idx]*b[idx] */, b);
   if (r != 0)
   {
     return r;
   }
   b[idx] = 1;
-  r = brute_force(n, p, desired_sum, idx + 1, partial_sum + p[idx] /* + p[idx]*b[idx] */, b) != 0;
+  r = brute_force_recursive(n, p, desired_sum, idx + 1, partial_sum + p[idx] /* + p[idx]*b[idx] */, b) != 0;
   return r;
 }
 
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
-int compare_int(const void *a, const void *b)
-{
-    return (*(integer_t *)a - *(integer_t *)b);
-}
+int brute_force_iterative(int n,integer_t p[n],integer_t desired_sum,int b[n]){
+    long long int total_sums = 1 << n;
+    long long int i,j,sum;
+    for(i = 0; i<total_sums;i++){
+        sum = 0;
+        for(j = 0; j<n ;j++){
+            if (i & (1 << j)){
 
-int hs(int n, integer_t p[n], integer_t desired_sum, int b[n])
-{
-    int impar = (n % 2) == 0;
-    integer_t upper[1 << (n / 2 + impar)];
-    long long int total_sums = 1 << (n / 2);
-    long long int i, j, sum_upper, sum_lower;
-    integer_t lower[total_sums];
-
-    // lower array
-
-    for (i = 0; i < total_sums; i++)
-    {
-        sum_lower = 0;
-        for (int j = 0; j < (n / 2); j++)
-        {
-            if ((i & (1 << j)) != 0)
-            {
-                //Vamos considerar i como um numero binário ex:10010101 e j o index do lower ou upper array
-                //O que faremos com a próxima expressão é aplicar uma mascara de bits assim como no int_to_bin_digit,  j and i se for
-                // 1 sumamos p[j] senão continuamos,com este algoritmo cada ciclo de i obtemos uma subsoma.
-                // exemplo n=4 então totalsums é 4.
-                // i = 1    ==     0001   i = 1    ==     0001   i = 1    ==     0001   i = 1    ==     0001
-                // j = 0 := 1<<j = 0001 & j = 1 := 1<<j = 0010 & j = 2 := 1<<j = 0100 & j = 2 := 1<<j = 1000 &
-                // res     ==      0001   res     ==      0000   res     ==      0000   res     ==      0000
-                //
-                sum_lower += p[j];
+                b[j] = 1;
+                sum += p[j]; 
             }
         }
-        // to implement
-        // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
-        lower[i] = sum_lower;
-    }
-    qsort(lower, total_sums, sizeof(integer_t), compare_int);
 
-    // Upper array
-
-    if (!impar)
-    {
-        for (i = 0; i < total_sums; i++)
-        {
-            sum_upper = 0;
-            for (j = 0; j < (n / 2); j++)
-            {
-                if ((i & (1 << j)) != 0)
-                {
-
-                    sum_upper += p[j + (n / 2)];
-                }
-            }
-
-            // to implement
-            // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
-            upper[i] = sum_upper;
-          
-    }
-    }else
-    {
-        total_sums <<= impar;
-        for (i = 0; i < total_sums; i++)
-        {
-            sum_upper = 0;
-            for (j = 0; j < (n / 2) + 1; j++)
-            {
-                if ((i & (1 << j)) != 0)
-                {
-                    sum_upper += p[j + (n / 2)];
-                }
-            }
-            // to implement
-            // if (sum  = desired_sum) b = int_to_bin(i),0 || b = 0,int_to_bin(i) break;
-            upper[i] = sum_upper;
+        if(sum == desired_sum){
+            return 0;
         }
+        memset(b, 0, n*sizeof(int));
     }
-
-    qsort(upper, total_sums, sizeof(integer_t), compare_int);
-    i = 0;
-    j = total_sums-1;
-
-
-     while(1){
-         if(upper[j]+lower[i] == desired_sum){
-             break;
-         } else if (upper[j]+lower[i] < desired_sum)
-         {
-             i++;
-             continue;
-         }
-         j--;
-    }
-    brute_force(n,p,lower[i],0,0,b);
-    brute_force(n,p+(n/2),upper[j],0,0,b+(n/2));
-    
-    return 0;
-
+    return 1;
 }
 
-
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
-
-/*FUNÇÕES AUXILIARES */
-
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
 
 double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
 {
@@ -147,7 +66,7 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
   int i;
   integer_t sum = 0;
   t = cpu_time();
-  if (brute_force(n, p, desired_sum, 0, sum, b) == 0)
+  if (brute_force_recursive(n, p, desired_sum, 0, sum, b) == 0)
   {
     fprintf(stderr, "MERDA\n");
   }
@@ -169,19 +88,82 @@ double applly_brute_force(int n, integer_t p[n], integer_t desired_sum)
   return cpu_time() - t;
 }
 
- void int_to_bin_digit(unsigned int in, int count, int* out)
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+/* Horowitz and Sahni*/
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+int compare_int(const void *a, const void *b)
+{
+    return (*(integer_t *)a - *(integer_t *)b);
+}
+
+void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
+    long long int total_sums = 1 << n;
+    long long int i,j,sum;
+    for(i = 0; i<total_sums;i++){
+        sum = 0;
+        for(j = 0; j<n ;j++){
+            if (i & (1 << j)){
+                sum += p[j]; 
+            }
+        }
+
+        sums[i] = sum;
+    }
+    qsort(sums,total_sums,sizeof(integer_t),compare_int);
+}
+
+
+void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
+
+    int n1 = n/2;
+    int n2 = n - n1;
+    int i = 0;
+    int j = (1 << n2) -1;
+    integer_t lower[1 << n1];
+    integer_t upper[1 << n2];
+
+    make_sums(n1,p,lower);
+    make_sums(n2,p+n1,upper);
+
+    while(1){
+         if(upper[j]+lower[i] == desired_sum){
+             break;
+         } else if (upper[j]+lower[i] < desired_sum)
+         {
+             i++;
+             continue;
+         }
+         j--;
+    }
+
+    brute_force_recursive(n1,p,lower[i],0,0,b);
+    brute_force_recursive(n2,p+n1,upper[j],0,0,b+n1);
+}
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+/*Uteis */
+
+// --------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+void int_to_bin_digit(long long int in, int count, int* out)
 {
     unsigned int mask = 1U << (count-1);
     // 100000 ... - cont zeros
     int i;
     for (i = 0; i < count; i++) {
         //100000            //100000
-        //101110 &          //011100
-        // = 100000 = 2^6     // = 000000 = 0
+        //101110 &          //011100 
+        // = 100000 > 0     // = 000000 = 0
         out[i] = (in & mask) ? 1 : 0; // if (in & mask)!=0 : 1 else 0
         in <<= 1;
     }
 }
+
+
 
 
 
