@@ -59,38 +59,37 @@
 //
 int main(void)
 {
-  fprintf(stderr, "Program configuration:\n");
-  fprintf(stderr, "  min_n ....... %d\n", min_n);
-  fprintf(stderr, "  max_n ....... %d\n", max_n);
-  fprintf(stderr, "  n_sums ...... %d\n", n_sums);
-  fprintf(stderr, "  n_problems .. %d\n", n_problems);
-  fprintf(stderr, "  integer_t ... %d bits\n", 8 * (int)sizeof(integer_t));
+  fprintf(stderr,"Program configuration:\n");
+  fprintf(stderr,"  min_n ....... %d\n",min_n);
+  fprintf(stderr,"  max_n ....... %d\n",max_n);
+  fprintf(stderr,"  n_sums ...... %d\n",n_sums);
+  fprintf(stderr,"  n_problems .. %d\n",n_problems);
+  fprintf(stderr,"  integer_t ... %d bits\n",8 * (int)sizeof(integer_t));
   //
   // for each n
   //
-  int i;
-  int j;
-  for (i = 0; i < n_problems; i++)
+  for(int i = 0;i < n_problems;i++)
   {
-    int n = all_subset_sum_problems[i].n;
-    // the value of n
-    if (n > max_n)
-      break;                                     // skip large values of n
+    int n = all_subset_sum_problems[i].n; // the value of n
+    if(n > 30)
+      continue; // skip large values of n
     integer_t *p = all_subset_sum_problems[i].p; // the weights
     //
     // for each sum
     //
-    printf("Linha %d \n", n);
-    for (j = 0; j < n_sums; j++)
+    printf("n = %d\n",n);
+    for(int j = 0;j < n_sums;j++)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
-      // double t = applly_brute_force(n, p, desired_sum);
-      int b[n];
-      hs( n, p, desired_sum, b);
-      //printf("%lf ", t); // matlab print
+      int b[n]; // array to record the solution
+      brute_force_iterative(n,p,desired_sum,b);
+      for(int l = 0;l<n;l++){
+        printf("%d",b[l]);
+      }
+      printf(" ");
     }
-
-    printf("\n"); // matlab print
+    printf("\n");
+  
   }
   return 0;
 }
