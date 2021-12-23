@@ -171,6 +171,25 @@ void int_to_bin_digit(long long int in, int count, int* out)
     }
 }
 
+void put(int n,integer_t *arr,integer_t sum,integer_t idx){
+    if(idx<n){
+        arr[idx] = sum;
+    }
+    idx++;
+}
+
+void make_sums_recursive(int n, integer_t p[n], integer_t lworup[1 << n], int l ,int r ,integer_t sum, integer_t idx){
+    // notas
+    // idx tem de ser static, pois se fizer lworup[idx] = sum ao chamar a função com idx+1 dá problemas (ñ faço a minima do que seja)
+    // qsort separado
+    if(l>r){
+        put(1 << n,lworup,sum,idx);
+        return;
+    }
+    make_sums_recursive(n,p,lworup,l+1,r,sum,idx);
+    make_sums_recursive(n,p,lworup,l+1,r,sum + p[l],idx);
+
+}
 
 
 

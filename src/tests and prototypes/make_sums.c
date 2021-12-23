@@ -24,6 +24,27 @@ void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
     qsort(sums,total_sums,sizeof(integer_t),compare_int);
 }
 
+void put(int n,integer_t *arr,integer_t sum,integer_t idx){
+    if(idx<n){
+        arr[idx] = sum;
+    }
+    idx++;
+}
+
+void make_sums_recursive(int n, integer_t p[n], integer_t lworup[1 << n], int l ,int r ,integer_t sum, integer_t idx){
+    // notas
+    // idx tem de ser static, pois se fizer lworup[idx] = sum ao chamar a função com idx+1 dá problemas (ñ faço a minima do que seja)
+    // qsort separado
+    if(l>r){
+        put(1 << n,lworup,sum,idx);
+        return;
+    }
+    make_sums_recursive(n,p,lworup,l+1,r,sum,idx);
+    make_sums_recursive(n,p,lworup,l+1,r,sum + p[l],idx);
+
+}
+
+
 int main(void){
     integer_t p[] = {(integer_t)5956ull,
       (integer_t)10669ull,
@@ -43,7 +64,8 @@ int main(void){
     int n = sizeof(p)/sizeof(integer_t);
     integer_t t = 1 << n ;
     integer_t sums[t];
-    make_sums(n,p,sums);
+    static integer_t idx = 0;
+    make_sums_recursive(n,p,sums,0,0,0,idx);
     for(int i = 0;i<t;i++){
         printf("%llu ",sums[i]);
     }
