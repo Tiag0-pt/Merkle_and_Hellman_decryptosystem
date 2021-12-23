@@ -37,16 +37,20 @@ void make_sums_recursive(int n, integer_t p[n], integer_t lworup[1 << n], int l 
     // qsort separado
     if(l>r){
         put(1 << n,lworup,sum,idx);
+        //printf("%llu ,sum"); - dá na prefeição sem put
+        //lworup[idx] = sum;
         return;
     }
-    make_sums_recursive(n,p,lworup,l+1,r,sum,idx);
-    make_sums_recursive(n,p,lworup,l+1,r,sum + p[l],idx);
+    
+    make_sums_recursive(n,p,lworup,l+1,r,sum,idx/*+1*/);
+    make_sums_recursive(n,p,lworup,l+1,r,sum + p[l],idx/*+1*/);
+    
 
 }
 
 
 int main(void){
-    integer_t p[] = {(integer_t)5956ull,
+    /* integer_t p[] = {(integer_t)5956ull,
       (integer_t)10669ull,
       (integer_t)11912ull,
       (integer_t)21338ull,
@@ -60,7 +64,9 @@ int main(void){
       (integer_t)70135ull,
       (integer_t)75427ull,
       (integer_t)78073ull,
-      (integer_t)82374ull};
+      (integer_t)82374ull}; */
+
+    integer_t p[] = {3,5,11};
     int n = sizeof(p)/sizeof(integer_t);
     integer_t t = 1 << n ;
     integer_t sums[t];
