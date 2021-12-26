@@ -8,8 +8,8 @@ int compare_int(const void *a, const void *b)
     return (*(integer_t *)a - *(integer_t *)b);
 }
 
-void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
-    long long int total_sums = 1 << n;
+void make_sums(int n,integer_t p[n],integer_t sums[1LL << n]){
+    long long int total_sums = 1LL<< n;
     long long int i,j,sum;
     for(i = 0; i<total_sums;i++){
         sum = 0;
@@ -50,30 +50,61 @@ void make_sums_recursive(int n, integer_t p[n], integer_t lworup[1 << n], int l 
 
 
 int main(void){
-    /* integer_t p[] = {(integer_t)5956ull,
-      (integer_t)10669ull,
-      (integer_t)11912ull,
-      (integer_t)21338ull,
-      (integer_t)29780ull,
-      (integer_t)35423ull,
-      (integer_t)47183ull,
-      (integer_t)51610ull,
-      (integer_t)60973ull,
-      (integer_t)62538ull,
-      (integer_t)67868ull,
-      (integer_t)70135ull,
-      (integer_t)75427ull,
-      (integer_t)78073ull,
-      (integer_t)82374ull}; */
+    integer_t p[] = {
+      (integer_t)46410444765ull,
+      (integer_t)81036928132ull,
+      (integer_t)81366551701ull,
+      (integer_t)86397807812ull,
+      (integer_t)92985775158ull,
+      (integer_t)104137017346ull,
+      (integer_t)146189351337ull,
+      (integer_t)158136914578ull,
+      (integer_t)185321282542ull,
+      (integer_t)189092346022ull,
+      (integer_t)203741367536ull,
+      (integer_t)217410788914ull,
+      (integer_t)241308482966ull,
+      (integer_t)271438497859ull,
+      (integer_t)294968708525ull,
+      (integer_t)332090606884ull,
+      (integer_t)342937628290ull,
+      (integer_t)369315087277ull,
+      (integer_t)415906400020ull,
+      (integer_t)416548069384ull,
+      (integer_t)475075421386ull,
+      (integer_t)478028150344ull,
+      (integer_t)484089496106ull,
+      (integer_t)527482219099ull,
+      (integer_t)532716421348ull,
+      (integer_t)533684618070ull,
+      (integer_t)535504595692ull,
+      (integer_t)543526972285ull,
+      (integer_t)591322360389ull,
+      (integer_t)596895434092ull,
+      (integer_t)604879191987ull,
+      (integer_t)623263947283ull,
+      (integer_t)658279731193ull,
+      (integer_t)705071587533ull,
+      (integer_t)730242341999ull,
+      (integer_t)751801006977ull,
+      (integer_t)758969290356ull,
+      (integer_t)773032490101ull
+    };
 
-    integer_t p[] = {3,5,11};
-    int n = sizeof(p)/sizeof(integer_t);
-    integer_t t = 1 << n ;
-    integer_t sums[t];
-    static integer_t idx = 0;
-    make_sums_recursive(n,p,sums,0,0,0,idx);
+    // integer_t p[] = {3,5,11};
+    int n = (sizeof(p)/sizeof(integer_t));
+    int n1 = n/2;
+    int n2 = n-n1;
+    long long int t=1LL<<n1;
+    integer_t lower[t];
+    t=1LL<<n2;
+    integer_t upper[t];
+    //make_sums(n1,p,lower);
+    make_sums(n2,p+n1,upper);
     for(int i = 0;i<t;i++){
-        printf("%llu ",sums[i]);
+        printf("%llu ",upper[i]);
     }
-    printf("\n%llu",t);
+    printf("\n\n%lld",t);
+    printf("\n\n%d",n);
+    printf("\n\n%lld", sizeof(int));
 }

@@ -101,9 +101,9 @@ int compare_int(const void *a, const void *b)
     return 0;
 }
 
-void make_sums(int n,integer_t p[n],integer_t sums[n]){
-    integer_t total_sums = 1 << n;
-    integer_t i,j,sum;
+void make_sums(int n,integer_t p[n],integer_t sums[1LL << n]){
+    long long int total_sums = 1LL<< n;
+    long long int i,j,sum;
     for(i = 0; i<total_sums;i++){
         sum = 0;
         for(j = 0; j<n ;j++){
@@ -117,6 +117,7 @@ void make_sums(int n,integer_t p[n],integer_t sums[n]){
     qsort(sums,total_sums,sizeof(integer_t),compare_int);
 }
 
+
 void print_arr(integer_t* arr, integer_t n) {
     for (integer_t i = 0; i < n; i++) {
         printf("%lld ", arr[i]);
@@ -127,10 +128,14 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
     int n1 = n/2;
     int n2 = n - n1;
-    int i = 0;
-    int j = (1 << n2) -1;
-    integer_t lower[1 << n1];
-    integer_t upper[1 << n2];
+    long long int t=1LL<<n1;
+    integer_t lower[t];
+    t=1LL<<n2;
+    integer_t upper[t];
+    integer_t i = 0;
+    integer_t j = (1LL << n2) -1;
+   
+    
 
     make_sums(n1,p,lower);
     make_sums(n2,p+n1,upper);
