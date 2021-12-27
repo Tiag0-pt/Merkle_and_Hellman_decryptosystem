@@ -101,9 +101,9 @@ int compare_int(const void *a, const void *b)
     return 0;
 }
 
-void make_sums(int n,integer_t p[n],integer_t sums[1LL << n]){
-    long long int total_sums = 1LL<< n;
-    long long int i,j,sum;
+void make_sums(int n,integer_t p[n],integer_t *sums){
+    integer_t total_sums = 1ULL<< n;
+    integer_t i,j,sum;
     for(i = 0; i<total_sums;i++){
         sum = 0;
         for(j = 0; j<n ;j++){
@@ -128,14 +128,12 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
     int n1 = n/2;
     int n2 = n - n1;
-    long long int t=1LL<<n1;
-    integer_t lower[t];
-    t=1LL<<n2;
-    integer_t upper[t];
+    integer_t t=1ULL<<n1;
+    integer_t* lower = (integer_t*)malloc(sizeof(integer_t)*t);
+    t=1ULL<<n2;
+    integer_t* upper = (integer_t*)malloc(sizeof(integer_t)*t);
     integer_t i = 0;
-    integer_t j = (1LL << n2) -1;
-   
-    
+    integer_t j = (1ULL << n2) -1;
 
     make_sums(n1,p,lower);
     make_sums(n2,p+n1,upper);
@@ -154,6 +152,9 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
     brute_force_recursive(n1,p,lower[i],0,0,b);
     brute_force_recursive(n2,p+n1,upper[j],0,0,b+n1);
+
+    free(lower);
+    free(upper);
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
