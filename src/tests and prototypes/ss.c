@@ -4,7 +4,9 @@ typedef unsigned long long integer_t;
 
 int compare_int(const void *a, const void *b)
 {
-    return (*(integer_t *)a - *(integer_t *)b);
+    if (*(integer_t*)a>*(integer_t*)b) return 1;
+    if (*(integer_t*)a<*(integer_t*)b) return -1;
+    return 0;
 }
 
 void make_sums(int n,integer_t p[n],integer_t sums[1 << n]){
@@ -32,10 +34,10 @@ void ss(int n, integer_t p[n],integer_t b[n],integer_t desired_sum){
     int n2a = n2/2;
     int n2b = n2 - n2a;
 
-    integer_t lwa[1 << n1a];
-    integer_t lwb[1 << n1b];
-    integer_t upa[1 << n2a];
-    integer_t upb[1 << n2b];
+    integer_t lwa = (integer_t*)malloc(sizeof(integer_t)*(1<<n1a));
+    integer_t lwb = (integer_t*)malloc(sizeof(integer_t)*(1<<n1b));
+    integer_t upa = (integer_t*)malloc(sizeof(integer_t)*(1<<n2a));
+    integer_t upb = (integer_t*)malloc(sizeof(integer_t)*(1<<n2b));
 
     make_sums(n1a,p,lwa);
     make_sums(n1b,p+n1a,lwb);
@@ -50,5 +52,8 @@ void ss(int n, integer_t p[n],integer_t b[n],integer_t desired_sum){
     - min-heap já está implementado no includes
     */
 
-
+    free(lwa);
+    free(lwb);
+    free(upa);
+    free(upb);
 }
