@@ -142,7 +142,7 @@ int peek(min_heap *h){
 
 int poll(min_heap *h){
     if(h->size == 0){
-        printf("ilegal operation: array empty");
+        return 0;
     }
     int item = h->array[0];
     h->array[0] = h->array[h->size - 1];
