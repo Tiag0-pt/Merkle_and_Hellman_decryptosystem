@@ -22,7 +22,7 @@ int brute_force_recursive(int n, integer_t p[n], integer_t desired_sum, int idx,
     }
     return 1;
   }
-  if (idx == n)
+  if (idx == n || partial_sum > desired_sum)
   {
     return 0;
   }
