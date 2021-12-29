@@ -104,8 +104,8 @@ min_heap *Create_min_Heap(int capacity){
 
 int main(void){
     int i;
-    min_heap h = *Create_min_Heap(6);
-    min_heap *p_h = &h;
+    
+    min_heap *p_h = Create_min_Heap(6);
     int arr[] = {1,3,6,11,23,34};
     for (i = 0;i<6;i++){
         add(p_h,arr[i]);
