@@ -57,7 +57,7 @@ int poll_max(max_heap *h){
 
 void add_max(max_heap *h,int item){
     if (h->size == h->capacity) {
-        printf("ilegal operation: max size reached cannot add_max elements");
+        printf("Too much -max heap ");
         return;
     }
     h->array[h->size] = item;
@@ -142,7 +142,7 @@ int peek(min_heap *h){
 
 int poll(min_heap *h){
     if(h->size == 0){
-        return 0;
+        return 7;
     }
     int item = h->array[0];
     h->array[0] = h->array[h->size - 1];
@@ -153,7 +153,7 @@ int poll(min_heap *h){
 
 void add(min_heap *h,int item){
     if (h->size == h->capacity) {
-        printf("ilegal operation: max size reached cannot add elements");
+        printf("Too much -min heap ");
         return;
     }
     h->array[h->size] = item;
