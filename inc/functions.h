@@ -2,7 +2,10 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 #include "functions.h"
+#include "elapsed_time.h"
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 typedef unsigned long long integer_t;
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------//
