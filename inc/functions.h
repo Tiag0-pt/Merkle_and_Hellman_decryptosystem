@@ -41,12 +41,12 @@ int brute_force_recursive(int n, integer_t p[n], integer_t desired_sum, int idx,
 }
 
 int brute_force_iterative(int n,integer_t p[n],integer_t desired_sum,int b[n]){
-    long long int total_sums = 1 << n;
+    long long int total_sums = 1LL << n;
     long long int i,j,sum;
     for(i = 0; i<total_sums;i++){
         sum = 0;
         for(j = 0; j<n ;j++){
-            if (i & (1 << j)){
+            if (i & (1LL << j)){
 
                 b[j] = 1;
                 sum += p[j]; 

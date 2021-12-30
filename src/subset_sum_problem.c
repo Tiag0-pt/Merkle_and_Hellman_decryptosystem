@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../inc/elapsed_time.h"
 #include "../inc/functions.h"
 #include STUDENT_H_FILE
 
@@ -69,7 +68,7 @@ int main(void)
   // for each n
   //
   double t;
-  for(int i = 0;i < n_problems;i++)
+  for(int i = 21;i < n_problems;i++)
   {
     int n = all_subset_sum_problems[i].n; // the value of n
     if(n > max_n)
@@ -79,13 +78,13 @@ int main(void)
     // for each sum
     //
     printf("Linha %d\n",n);
-    for(int j = 1;j < n_sums;j++)
+    for(int j = 0;j < n_sums;j++)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
       int b[n]; // array to record the solution
       //brute_force_iterative(n,p,desired_sum,b);
       t = cpu_time();
-      hs(n,p,desired_sum,b);
+      brute_force_iterative(n,p,desired_sum,b);
       printf("%f ",cpu_time()-t);
       
     }
