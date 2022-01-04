@@ -96,6 +96,8 @@ int brute_force_recursive(int n, integer_t p[n], integer_t desired_sum, int idx,
 }
 ```
 
+![[bfrecursive.png]]
+
 ```c
 int brute_force_iterative(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
@@ -122,10 +124,16 @@ int brute_force_iterative(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 	return 1;
 }
 ```
+
+![[bfiterative.png]]
+
 Implementamos este metodo de duas formas, **recursivamente e iterativamente**, quando aplicado em geral o **metodo recursivo** quando verificando exprimentalmente é ligeiramente mais eficiente do que o método recursivo.
 
+![[bruteforce.png]]
 
-\[\[graph here\]\]
+
+
+
 
 ## Horowitz and Sahni
 
@@ -169,13 +177,91 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
  
  E em termos de complexidade computacional espacial este algoritmo terá **Big O notation** de **(2^n/2 \*2 )**.
  
- \[\[Insert graph here\]\]
+![[hs.png]]
+
+![[all_functions.png]]
  
  ## Schroeppel and Shamir
  
  Este método é basedo num melhoramente feito por **Schroeppel and Shamir** que visa melhorar a complexidade temporal chegando á soma desejada após dividir a chave publica e calcular as suas somas, iterativamente.
- 
- Para isso ultilizamos uma priority queue que ...
+
+ Para calcularmos as somas iterativamente dividimos as chave publica em 4 e calculamos as subsomas desses arrays  (lwa,lwb;upa,upb), apartir dai escolhemos um dos arrays de cada metade para iterar as somas para uma heap (lwa,upa).
+
+ ```c
+ void refill_lw_heap(long long int a,min_heap *lw_heap, integer_t *lwa , integer_t *lwb ,int size){
+  long long int ib;
+  for(ib=0;ib<(1LL << size);ib++){
+        //printf("%lld ",lwa[ia]+lwb[ib]);
+        add(lw_heap,(lwa[a]+lwb[ib]));
+  }
+  a++;
+}
+void refill_up_upper(long long int a,max_heap *up_heap, integer_t *upa , integer_t *upb ,int size){
+  long long int jb;
+  for(jb=(1<<size)-1;jb>-1;jb--){
+        //printf("%lld -> %d ",upa[ja]+upb[jb],jb);
+        add_max(up_heap,upa[a]+upb[jb]);
+  }
+  a--;
+}
+ ```
+
+Depois fazemos algo relativamente parecido ao hs com o algoritmo dos dois ponteiros e posteriormente usariamos o brute_force
+
+```c
+ while(sum != desired_sum){
+	...
+
+	if(sum <  desired_sum){
+        j = poll_max(upper_heap);
+        sum = i+j;
+        j_idx--;
+        continue;
+      }
+      i = poll(lower_heap);
+      sum = i+j;
+      i_idx++;
+}
+
+No entanto se a min ou max heap ficar sem elementos simplesmente damos um refill a relativa heap
+
+```c
+while(sum != desired_sum){
+      
+      if(upper_heap->size == 0){
+		refill_max(ja,upper_heap,upa,upb,n2b)
+        j = poll_max(upper_heap);
+        sum = i+j;
+        j_idx--;
+
+        continue;
+      }
+
+      if(lower_heap->size == 0){
+        refill_max(ia,lower_heap,lwa,lwb,n1b)
+        i = poll(lower_heap);
+        sum = i + j;
+        i_idx ++;
+        continue;
+      } 
+
+      if(sum <  desired_sum){
+        j = poll_max(upper_heap);
+        sum = i+j;
+        j_idx--;
+        continue;
+      }
+      i = poll(lower_heap);
+      sum = i+j;
+      i_idx++;
+}
+```
+
+Estando assim portanto a unicamente ultilizar 2 arrays de n/2^2\*sizeof(integer_t) bytes para apenas ultilizarmos 4 de n/4^2\*sizeof(integer_t) bytes e duas heaps que ocupam em conjunto 2*n/4^2\*sizeof(integer_t) bytes
+
+\[\[insert graph here\]\]
+
+Como podemos ver este metodo chega a ser relativamente também um pouco mais eficiente em termos de tempo e se quisessemos poderiamos decriptar chaves com mais elementos que o hs devido a limitações de memória. 
  
  
  
