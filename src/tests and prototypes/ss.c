@@ -80,9 +80,10 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     long long int j_idx = (1LL << n2) - 1;
     long long int i_idx = 0;
 
-    
+
     
     while(sum != desired_sum){
+      printf("%llu\n",sum);
       if(upper_heap->size == 0){
         for(jb=(1<<n2b)-1;jb>-1;jb--){
           add_max(upper_heap,upa[ja]+upb[jb]);
@@ -120,7 +121,7 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 }
 
 int main(void){
-    integer_t p[] ={
+    /* integer_t p[] ={
       (integer_t)5956ull,
       (integer_t)10669ull,
       (integer_t)11912ull,
@@ -136,11 +137,24 @@ int main(void){
       (integer_t)75427ull,
       (integer_t)78073ull,
       (integer_t)82374ull
-    };
+    }; */
 
-    // integer_t p[]  = {1,3,7,11,13,19};
+    integer_t p[]  = {1,3,7,11,13,19};
+
+    
+
+   
 
     int n = sizeof(p)/sizeof(integer_t);
+
+    integer_t k[1LL << n];
+
+    make_sums(n,p,k);
+
+    for(int i = 0;i<(1LL << n);i++){
+      printf("%llu ",k[i]);
+    }
+
     integer_t desired_sum = 647299; //p[3] + p[n-1]
     int b[n];
 
