@@ -45,14 +45,14 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     make_sums(n2a,p+(n1a+n1b),upa);
     make_sums(n2b,p+(n1a+n1b+n2a),upb);
     
-    printf("size lwa %d \n",(n1a));
-    printf("size lwb %d \n",(n1b));
-    printf("size upa %d \n",(n2a));
-    printf("size upb %d \n",(n2b));
+    printf("size lwa %d \n",(1LL<<n1a));
+    printf("size lwb %d \n",(1LL<<n1b));
+    printf("size upa %d \n",(1LL<<n2a));
+    printf("size upb %d \n",(1LL<<n2b));
 
     int ia=0;
     int ib=0;
-    int ja=(1<<n2b)-1;
+    int ja=(1<<n2a)-1;
     int jb=(1<<n2b)-1;
 
     
@@ -62,6 +62,7 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         add(lower_heap,(lwa[ia]+lwb[ib]));
     }
     ia++;
+    ib = 0;
 
     
     for(jb=(1<<n2b)-1;jb>-1;jb--){
@@ -69,53 +70,40 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         add_max(upper_heap,upa[ja]+upb[jb]);
     }
     ja--;
+    jb =(1<<n2b)-1;
 
     
 
-    int j = poll_max(upper_heap);
-    int i = poll(lower_heap);
+    int j;
+    int i; 
 
-    integer_t sum = i + j;
+    integer_t sum = poll(lower_heap)+poll_max(upper_heap);
 
-    long long int j_idx = (1LL << n2) - 1;
-    long long int i_idx = 0;
-
-
+    
     
     while(sum != desired_sum){
-      printf("%llu\n",sum);
-      if(upper_heap->size == 0){
-        for(jb=(1<<n2b)-1;jb>-1;jb--){
-          add_max(upper_heap,upa[ja]+upb[jb]);
+      if(sum < desired_sum){
+        if(ib > (1LL<<n1b)){
+          ia++;
+          add(lower_heap,lwa[ia]+lwb[0]);
+          ib=1;
         }
-        ja--;
-        j = poll_max(upper_heap);
-        sum = i+j;
-        j_idx--;
-
-        continue;
-      }
-
-      if(lower_heap->size == 0){
-        for(ib=0;ib<(1LL << n1b);ib++){
-          add(lower_heap,(lwa[ia]+lwb[ib]));
-        }
-        ia++;
         i = poll(lower_heap);
-        sum = i + j;
-        i_idx ++;
-        continue;
-      } 
-
-      if(sum <  desired_sum){
-        j = poll_max(upper_heap);
-        sum = i+j;
-        j_idx--;
+        printf("poll i -> %llu \n",i);
+        sum = j+i;
+        ib++;
         continue;
       }
-      i = poll(lower_heap);
-      sum = i+j;
-      i_idx++;
+
+      if(jb < 0){
+        ja--;
+        add_max(upper_heap,upa[ja]+upb[(1<<n2b)-1]);
+        jb = (1<<n2b)-2;
+      }
+      j  = poll_max(upper_heap);
+      printf("poll j -> %llu \n",j);
+      sum = j+i;
+      jb--;
     }
     printf("%d %d",j,i);
 }
@@ -155,7 +143,7 @@ int main(void){
       printf("%llu ",k[i]);
     }
 
-    integer_t desired_sum = 647299; //p[3] + p[n-1]
+    integer_t desired_sum = 44; //p[3] + p[n-1]
     int b[n];
 
     ss(n,p,desired_sum,b);

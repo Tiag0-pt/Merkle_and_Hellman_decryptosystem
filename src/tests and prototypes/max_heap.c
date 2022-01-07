@@ -104,14 +104,13 @@ max_heap *Create_max_heap(int capacity){
 
 int main(void){
     int i;
-    max_heap h = *Create_max_heap(7);
-    max_heap *p_h = &h;
+    max_heap *h = Create_max_heap(7);
     int arr[] = {1,3,6,11,23,34,2};
     for (i = 0;i<7;i++){
-        add(p_h,arr[i]);
+        add(h,arr[i]);
     }
     
     for (i = 0;i<7;i++){
-        printf("%d parent -> %d\n",p_h->array[i],p_h->array[get_parent_idx(i)]);
+        printf("%d ",poll(h));
     }
 }
