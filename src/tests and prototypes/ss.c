@@ -96,7 +96,7 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         if (sum < desired_sum){
             poll(lower_heap);
             if (i.a+1 < (1LL<<n1a)){
-                pair_sum pair = {i.a-1, i.b, lwa[i.a+1]+lwb[i.b]};
+                pair_sum pair = {i.a+1, i.b, lwa[i.a+1]+lwb[i.b]};
                 add(lower_heap, pair);
             }
         }
@@ -141,7 +141,7 @@ int main(void){
 
     make_sums(n,p,k);
 
-    integer_t desired_sum = 49; //p[3] + p[n-1]
+    integer_t desired_sum = 54; //p[3] + p[n-1]
     int b[n];
 
     ss(n,p,desired_sum,b);
