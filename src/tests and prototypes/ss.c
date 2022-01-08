@@ -39,10 +39,10 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     integer_t *upa = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2a));
     integer_t *upb = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2b));
 
-    printf("size of lwa -> %lld\n", (1LL<<n1a));
+   /*  printf("size of lwa -> %lld\n", (1LL<<n1a));
     printf("size of lwb -> %lld\n", (1LL<<n1b));
     printf("size of upa -> %lld\n", (1LL<<n2a));
-    printf("size of upb -> %lld\n", (1LL<<n2b));
+    printf("size of upb -> %lld\n", (1LL<<n2b)); */
 
     min_heap *lower_heap = Create_min_Heap((1LL<<n1b));
     max_heap *upper_heap = Create_max_heap((1LL<<n2b));
@@ -52,10 +52,10 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     make_sums(n2a,p+(n1a+n1b),upa);
     make_sums(n2b,p+(n1a+n1b+n2a),upb);
     
-    int ia=0;
-    int ib=0;
-    int ja=(1<<n2a)-1;
-    int jb=(1<<n2b)-1;
+    long long int ia=0;
+    long long int ib=0;
+    long long int ja=(1<<n2a)-1;
+    long long int jb=(1<<n2b)-1;
 
     for(ib=0;ib<(1LL << n1b);ib++){
         //add(Q', (first(T1), P2))
@@ -102,7 +102,7 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         }
 
         if (sum > desired_sum){
-            printf("here\n");
+            //printf("here\n");
             poll_max(upper_heap);
             if (j.a-1 > -1){
                 pair_sum pair = {j.a-1, j.b, upa[j.a-1]+upb[j.b]};
@@ -111,7 +111,9 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         }
 
     }
-    printf("Result -> %lld %lld\n",j.sum,i.sum);
+    /* printf("desired_sum -> %llu\n",desired_sum);
+    printf("Result -> %lld %lld\n",j.sum,i.sum); */
+    printf("v -> %d\n", ((j.sum+i.sum) == desired_sum));
 }
 
 int main(void){
@@ -141,9 +143,11 @@ int main(void){
 
     make_sums(n,p,k);
 
-    integer_t desired_sum = 54; //p[3] + p[n-1]
+    //integer_t desired_sum = 49; //p[3] + p[n-1]
     int b[n];
 
-    ss(n,p,desired_sum,b);
+    for(int i =0;i<(1LL << n);i++){
+        ss(n,p,k[i],b);
+    }
 
 }
