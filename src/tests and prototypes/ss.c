@@ -64,7 +64,7 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     for(int ja=0;ja<(1LL<<n2a);ja++){
         //add(Q'', (P3, first(P4)))
         pair_sum pair = {ja, (1LL<<n2b)-1, upa[ja]+upb[(1LL<<n2b)-1]};
-        printf("pair2->%d\n",  upa[ja]);
+        //printf("pair2->%d\n",  upa[ja]);
         add_max(upper_heap, pair);
     }
 
@@ -78,10 +78,10 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         j = peek_max(upper_heap);
         sum = i.sum+j.sum;
 
-        printf("sum->%d\n",sum);
+       /*  printf("sum->%d\n",sum);
         printf("i->%d\n",i.sum);
         printf("j->%d\n",j.sum);
-        printf("================\n");
+        printf("================\n"); */
         /*
         // DEBUG
         printf("sum->%d\n",sum);
@@ -105,8 +105,8 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         if (sum > desired_sum){
             poll_max(upper_heap);
             if ((j.b-1) != -1){
-                printf("here2: %lld\n", j.b-1);
-                printf("here3: %lld\n", upb[j.b-1]);
+               /*  printf("here2: %lld\n", j.b-1);
+                printf("here3: %lld\n", upb[j.b-1]); */
                 pair_sum pair = {j.a, j.b-1, upa[j.a]+upb[j.b-1]};
                 add_max(upper_heap, pair);
             }
@@ -117,11 +117,22 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         printf("NOT FOUND!!!!\n");
         return;
     }
-    printf("Result -> %lld %lld\n",j.sum,i.sum);
+    /* printf("v -> %d\n",desired_sum == (j.sum+i.sum));
+    //printf("Result -> %lld %lld\n",j.sum,i.sum); */
+
+    brute_force_recursive(n1a,p,lwa[i.a],0,0,b);
+    brute_force_recursive(n1b,p+n1a,lwb[i.b],0,0,b+n1a);
+    brute_force_recursive(n2a,p+(n1a+n1b),upa[j.a],0,0,b+(n1a+n1b));
+    brute_force_recursive(n2a,p+(n1a+n1b+n2a),upb[j.b],0,0,b+(n1a+n1b+n2a));
+
+   /*  for(int k = 0;k<n;k++){
+        printf("%d",b[k]);
+    }
+    printf("\n"); */
 }
 
 int main(void){
-    /*
+    
     integer_t p[] ={
       (integer_t)5956ull,
       (integer_t)10669ull,
@@ -139,23 +150,44 @@ int main(void){
       (integer_t)78073ull,
       (integer_t)82374ull
     };
-    */
+   
 
-    integer_t p[]  = {1,3,7,11,13,19};
+    //integer_t p[]  = {1,3,7,11,13,19};
 
     int n = sizeof(p)/sizeof(integer_t);
 
-    integer_t k[1ull << n];
+    integer_t k[]= {
+      (integer_t)300710ull, // 011101000010110
+      (integer_t)253043ull, // 111111000100100
+      (integer_t)288437ull, // 111100101110000
+      (integer_t)415088ull, // 001111101110010
+      (integer_t)380896ull, // 001101110011100
+      (integer_t)420299ull, // 001000011011101
+      (integer_t)298025ull, // 101001110010010
+      (integer_t)531675ull, // 101000111111110
+      (integer_t)403901ull, // 010101101010011
+      (integer_t)332851ull, // 000011010100110
+      (integer_t)303782ull, // 111000010001110
+      (integer_t)238605ull, // 010000000001101
+      (integer_t)104257ull, // 100110100000000
+      (integer_t)172492ull, // 011110110000000
+      (integer_t)328726ull, // 101101101010010
+      (integer_t)311511ull, // 111010011100010
+      (integer_t)595383ull, // 101101111111011
+      (integer_t)311200ull, // 100100000110110
+      (integer_t)480251ull, // 101111111011010
+      (integer_t)415184ull // 110011100101110
+    };
 
-    make_sums(n,p,k);
+    //make_sums(n,p,k);
 
     //integer_t desired_sum = 49; //p[3] + p[n-1]
     int b[n];
 
     //ss(n,p,desired_sum,b);
-    for (integer_t i = 0; i < 1ll<<n;i++)
+    for (int i = 0; i < 20;i++)
     {
-        printf("k[i] ->%lld\n", k[i]);
+        // printf("k[i] ->%lld\n", k[i]);
         ss(n,p,k[i],b);
     }
 }

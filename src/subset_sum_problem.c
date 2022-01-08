@@ -68,7 +68,7 @@ int main(void)
   // for each n
   //
   double t;
-  for(int i = 21;i < n_problems;i++)
+  for(int i = 0;i < n_problems;i++)
   {
     int n = all_subset_sum_problems[i].n; // the value of n
     if(n > max_n)
@@ -82,9 +82,11 @@ int main(void)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
       int b[n]; // array to record the solution
-      //brute_force_iterative(n,p,desired_sum,b);
+      //applly_brute_force(n,p,desired_sum,b);
       t = cpu_time();
-      brute_force_iterative(n,p,desired_sum,b);
+      //brute_force_iterative(n,p,desired_sum,b);
+      //hs(n,p,desired_sum,b);
+      ss(n,p,desired_sum,b);
       printf("%f ",cpu_time()-t);
       
     }

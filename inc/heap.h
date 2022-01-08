@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include <errno.h>
 
+typedef unsigned long long integer_t;
+
 struct pair_sum 
 {
     integer_t a;
@@ -21,7 +23,7 @@ struct max_heap
     long long int capacity;
 };
 
-typedef unsigned long long integer_t;
+
 
 typedef struct max_heap max_heap;
 
