@@ -39,10 +39,12 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     integer_t *upa = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2a));
     integer_t *upb = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2b));
 
-   /*  printf("size of lwa -> %lld\n", (1LL<<n1a));
+    /*
+    printf("size of lwa -> %lld\n", (1LL<<n1a));
     printf("size of lwb -> %lld\n", (1LL<<n1b));
     printf("size of upa -> %lld\n", (1LL<<n2a));
-    printf("size of upb -> %lld\n", (1LL<<n2b)); */
+    printf("size of upb -> %lld\n", (1LL<<n2b));
+    */
 
     min_heap *lower_heap = Create_min_Heap((1LL<<n1b));
     max_heap *upper_heap = Create_max_heap((1LL<<n2b));
@@ -51,25 +53,20 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     make_sums(n1b,p+n1a,lwb);
     make_sums(n2a,p+(n1a+n1b),upa);
     make_sums(n2b,p+(n1a+n1b+n2a),upb);
-    
-    long long int ia=0;
-    long long int ib=0;
-    long long int ja=(1<<n2a)-1;
-    long long int jb=(1<<n2b)-1;
 
-    for(ib=0;ib<(1LL << n1b);ib++){
-        //add(Q', (first(T1), P2))
-        pair_sum pair = {ia, ib, lwa[ia]+lwb[ib]};
+    for(int ia=0;ia<(1LL << n1a);ia++){
+        //add(Q', (P1, first(P2)))
+        pair_sum pair = {ia, 0, lwa[ia]+lwb[0]};
+        //printf("pair->%d\n", lwa[ia]+lwb[0]);
         add(lower_heap, pair);
     }
-    ia++;
     
-    for(jb=(1<<n2b)-1;jb>-1;jb--){
-        //add(Q'', (first(T3), P4))
-        pair_sum pair = {ja, jb, upa[ja]+upb[jb]};
+    for(int ja=0;ja<(1LL<<n2a);ja++){
+        //add(Q'', (P3, first(P4)))
+        pair_sum pair = {ja, (1LL<<n2b)-1, upa[ja]+upb[(1LL<<n2b)-1]};
+        printf("pair2->%d\n",  upa[ja]);
         add_max(upper_heap, pair);
     }
-    ja--;
 
     pair_sum j;
     pair_sum i; 
@@ -80,6 +77,11 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         i = peek(lower_heap);
         j = peek_max(upper_heap);
         sum = i.sum+j.sum;
+
+        printf("sum->%d\n",sum);
+        printf("i->%d\n",i.sum);
+        printf("j->%d\n",j.sum);
+        printf("================\n");
         /*
         // DEBUG
         printf("sum->%d\n",sum);
@@ -90,34 +92,37 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
         printf("================\n");
         */
 
-
         if (sum == desired_sum) break;
 
         if (sum < desired_sum){
             poll(lower_heap);
-            if (i.a+1 < (1LL<<n1a)){
-                pair_sum pair = {i.a+1, i.b, lwa[i.a+1]+lwb[i.b]};
+            if (i.b+1 < (1LL<<n1b)){
+                pair_sum pair = {i.a, i.b+1, lwa[i.a]+lwb[i.b+1]};
                 add(lower_heap, pair);
             }
         }
 
         if (sum > desired_sum){
-            //printf("here\n");
             poll_max(upper_heap);
-            if (j.a-1 > -1){
-                pair_sum pair = {j.a-1, j.b, upa[j.a-1]+upb[j.b]};
+            if ((j.b-1) != -1){
+                printf("here2: %lld\n", j.b-1);
+                printf("here3: %lld\n", upb[j.b-1]);
+                pair_sum pair = {j.a, j.b-1, upa[j.a]+upb[j.b-1]};
                 add_max(upper_heap, pair);
             }
         }
 
     }
-    /* printf("desired_sum -> %llu\n",desired_sum);
-    printf("Result -> %lld %lld\n",j.sum,i.sum); */
-    printf("v -> %d\n", ((j.sum+i.sum) == desired_sum));
+    if(desired_sum!=sum){
+        printf("NOT FOUND!!!!\n");
+        return;
+    }
+    printf("Result -> %lld %lld\n",j.sum,i.sum);
 }
 
 int main(void){
-    /* integer_t p[] ={
+    /*
+    integer_t p[] ={
       (integer_t)5956ull,
       (integer_t)10669ull,
       (integer_t)11912ull,
@@ -133,21 +138,24 @@ int main(void){
       (integer_t)75427ull,
       (integer_t)78073ull,
       (integer_t)82374ull
-    }; */
+    };
+    */
 
     integer_t p[]  = {1,3,7,11,13,19};
 
     int n = sizeof(p)/sizeof(integer_t);
 
-    integer_t k[1LL << n];
+    integer_t k[1ull << n];
 
     make_sums(n,p,k);
 
     //integer_t desired_sum = 49; //p[3] + p[n-1]
     int b[n];
 
-    for(int i =0;i<(1LL << n);i++){
+    //ss(n,p,desired_sum,b);
+    for (integer_t i = 0; i < 1ll<<n;i++)
+    {
+        printf("k[i] ->%lld\n", k[i]);
         ss(n,p,k[i],b);
     }
-
 }
