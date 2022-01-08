@@ -5,6 +5,7 @@
 
 typedef unsigned long long integer_t;
 
+/*
 void refill_lw(long long int a,min_heap *lw_heap, integer_t *lwa , integer_t *lwb ,int size){
   long long int ib;
   for(ib=0;ib<(1LL << size);ib++){
@@ -21,6 +22,7 @@ void refill_up(long long int a,max_heap *up_heap, integer_t *upa , integer_t *up
   }
   a--;
 }
+*/
 
 
 void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
@@ -42,8 +44,8 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
     printf("size of upa -> %lld\n", (1LL<<n2a));
     printf("size of upb -> %lld\n", (1LL<<n2b));
 
-    min_heap *lower_heap = Create_min_Heap((1LL<<n1b+1));
-    max_heap *upper_heap = Create_max_heap((1LL<<n2b+1));
+    min_heap *lower_heap = Create_min_Heap((1LL<<n1b));
+    max_heap *upper_heap = Create_max_heap((1LL<<n2b));
 
     make_sums(n1a,p,lwa);
     make_sums(n1b,p+n1a,lwb);
@@ -57,51 +59,59 @@ void ss(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
     for(ib=0;ib<(1LL << n1b);ib++){
         //add(Q', (first(T1), P2))
-        add(lower_heap,(lwa[ia]+lwb[ib]));
+        pair_sum pair = {ia, ib, lwa[ia]+lwb[ib]};
+        add(lower_heap, pair);
     }
     ia++;
     
     for(jb=(1<<n2b)-1;jb>-1;jb--){
         //add(Q'', (first(T3), P4))
-        add_max(upper_heap,upa[ja]+upb[jb]);
+        pair_sum pair = {ja, jb, upa[ja]+upb[jb]};
+        add_max(upper_heap, pair);
     }
     ja--;
 
-    int j;
-    int i; 
+    pair_sum j;
+    pair_sum i; 
     integer_t sum; 
+
 
     while(lower_heap->size != 0 && upper_heap->size != 0){
         i = peek(lower_heap);
         j = peek_max(upper_heap);
-        sum = i+j;
+        sum = i.sum+j.sum;
+        /*
+        // DEBUG
+        printf("sum->%d\n",sum);
+        printf("ia->%d\n",ia);
+        printf("ib->%d\n",i.b);
+        printf("min_heap size->%d\n",lower_heap->size);
+        printf("max_heap size->%d\n",upper_heap->size);
+        printf("================\n");
+        */
+
 
         if (sum == desired_sum) break;
 
         if (sum < desired_sum){
             poll(lower_heap);
-            if (ia < (1LL<<n1a)){
-                for(ib=0;ib<(1LL << n1b);ib++){
-                    //add(Q', (first(T1), P2))
-                    add(lower_heap,(lwa[ia]+lwb[ib]));
-                }
-                ia++;
+            if (i.a+1 < (1LL<<n1a)){
+                pair_sum pair = {i.a-1, i.b, lwa[i.a+1]+lwb[i.b]};
+                add(lower_heap, pair);
             }
         }
 
         if (sum > desired_sum){
+            printf("here\n");
             poll_max(upper_heap);
-            if (ib>-1){
-                for(jb=(1<<n2b)-1;jb>-1;jb--){
-                    //add(Q'', (first(T3), P4))
-                    add_max(upper_heap,upa[ja]+upb[jb]);
-                }
-                ja--;
+            if (j.a-1 > -1){
+                pair_sum pair = {j.a-1, j.b, upa[j.a-1]+upb[j.b]};
+                add_max(upper_heap, pair);
             }
         }
 
     }
-    printf("Result -> %d %d\n",j,i);
+    printf("Result -> %lld %lld\n",j.sum,i.sum);
 }
 
 int main(void){
@@ -131,7 +141,7 @@ int main(void){
 
     make_sums(n,p,k);
 
-    integer_t desired_sum = 54; //p[3] + p[n-1]
+    integer_t desired_sum = 49; //p[3] + p[n-1]
     int b[n];
 
     ss(n,p,desired_sum,b);

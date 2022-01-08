@@ -5,9 +5,18 @@
 #include<stdlib.h>
 #include <errno.h>
 
+struct pair_sum 
+{
+    integer_t a;
+    integer_t b;
+    integer_t sum;
+};
+
+typedef struct pair_sum pair_sum;
+
 struct max_heap
 {
-    integer_t *array;
+    pair_sum *array;
     long long int size;
     long long int capacity;
 };
@@ -28,36 +37,36 @@ int has_child_max(max_heap *h,long long int idx_parent_max, int direction ){retu
 
 int has_parent_max(max_heap *h,long long int idx_child_max){return get_parent_idx(idx_child_max) >= 0;}
 
-integer_t child_max(max_heap *h,long long int idx,int direction){return h->array[get_child_idx(idx,direction)];}
+integer_t child_max(max_heap *h,long long int idx,int direction){return h->array[get_child_idx(idx,direction)].sum;}
 
-integer_t parent_max(max_heap *h,long long int idx){return h->array[get_parent_idx(idx)];}
+integer_t parent_max(max_heap *h,long long int idx){return h->array[get_parent_idx(idx)].sum;}
 
 void swap_max(max_heap *h,long long int idx_1,long long int idx_2){
     
-    integer_t temp = h->array[idx_1];
+    pair_sum temp = h->array[idx_1];
     h->array[idx_1] = h->array[idx_2];
     h->array[idx_2] = temp;
 }
 
-integer_t peek_max(max_heap *h){
+pair_sum peek_max(max_heap *h){
     if(h->size == 0){
         printf("ilegal operation: array empty");
     }
     return h->array[0];
 }
 
-integer_t poll_max(max_heap *h){
+pair_sum poll_max(max_heap *h){
     if(h->size == 0){
         printf("ilegal operation: array empty");
     }
-    integer_t item = h->array[0];
+    pair_sum item = h->array[0];
     h->array[0] = h->array[h->size - 1];
     h->size--;
     heapifyDown_max(h);
     return item;
 }
 
-void add_max(max_heap *h,integer_t item){
+void add_max(max_heap *h,pair_sum item){
     if (h->size == h->capacity) {
         printf("Too much -max heap ");
         return;
@@ -69,7 +78,7 @@ void add_max(max_heap *h,integer_t item){
 
 void heapifyUp_max(max_heap *h){
     long long int idx = h->size - 1;
-    while(has_parent_max(h,idx) && (parent_max(h,idx) < h->array[idx])){
+    while(has_parent_max(h,idx) && (parent_max(h,idx) < h->array[idx].sum)){
         swap_max(h,get_parent_idx(idx),idx);
         idx = get_parent_idx(idx);
     }
@@ -83,7 +92,7 @@ void heapifyDown_max(max_heap *h){
             big_child_max_idx = get_child_idx(idx,1);
         }
 
-        if(h->array[idx] > h->array[big_child_max_idx]){
+        if(h->array[idx].sum > h->array[big_child_max_idx].sum){
             break;
         } else {
             swap_max(h,idx,big_child_max_idx);
@@ -93,7 +102,7 @@ void heapifyDown_max(max_heap *h){
 }
 
 max_heap *Create_max_heap(long long int capacity){
-    integer_t *arr = (integer_t *) malloc(capacity*sizeof(integer_t));
+    pair_sum *arr = (pair_sum*)malloc(capacity*sizeof(pair_sum));
     if ( arr == NULL){
         printf("Memory Error!");
     }
@@ -107,7 +116,7 @@ max_heap *Create_max_heap(long long int capacity){
 
 struct min_heap
 {
-    integer_t *array;
+    pair_sum *array;
     long long int size;
     long long int capacity;
 };
@@ -124,36 +133,36 @@ int has_child(min_heap *h,long long int idx_parent, int direction ){return get_c
 
 int has_parent(min_heap *h,long long int idx_child){return get_parent_idx(idx_child) >= 0;}
 
-integer_t child(min_heap *h,long long int idx,int direction){return h->array[get_child_idx(idx,direction)];}
+integer_t child(min_heap *h,long long int idx,int direction){return h->array[get_child_idx(idx,direction)].sum;}
 
-integer_t parent(min_heap *h,long long int idx){return h->array[get_parent_idx(idx)];}
+integer_t parent(min_heap *h,long long int idx){return h->array[get_parent_idx(idx)].sum;}
 
 void swap(min_heap *h,long long int idx_1,long long int idx_2){
     
-    integer_t temp = h->array[idx_1];
+    pair_sum temp = h->array[idx_1];
     h->array[idx_1] = h->array[idx_2];
     h->array[idx_2] = temp;
 }
 
-integer_t peek(min_heap *h){
+pair_sum peek(min_heap *h){
     if(h->size == 0){
         printf("ilegal operation: array empty");
     }
     return h->array[0];
 }
 
-integer_t poll(min_heap *h){
+pair_sum poll(min_heap *h){
     if(h->size == 0){
-        return 7;
+        return *(pair_sum*)0;
     }
-    integer_t item = h->array[0];
+    pair_sum item = h->array[0];
     h->array[0] = h->array[h->size - 1];
     h->size--;
     heapifyDown(h);
     return item;
 }
 
-void add(min_heap *h,integer_t item){
+void add(min_heap *h,pair_sum item){
     if (h->size == h->capacity) {
         printf("Too much -min heap ");
         return;
@@ -165,7 +174,7 @@ void add(min_heap *h,integer_t item){
 
 void heapifyUp(min_heap *h){
     long long int idx = h->size - 1;
-    while(has_parent(h,idx) && parent(h,idx) > h->array[idx]){
+    while(has_parent(h,idx) && parent(h,idx) > h->array[idx].sum){
         swap(h,get_parent_idx(idx),idx);
         idx = get_parent_idx(idx);
     }
@@ -179,7 +188,7 @@ void heapifyDown(min_heap *h){
             small_child_idx = get_child_idx(idx,1);
         }
 
-        if(h->array[idx] < h->array[small_child_idx]){
+        if(h->array[idx].sum < h->array[small_child_idx].sum){
             break;
         } else {
             swap(h,idx,small_child_idx);
@@ -189,7 +198,7 @@ void heapifyDown(min_heap *h){
 }
 
 min_heap *Create_min_Heap(long long int capacity){
-    integer_t *arr = (integer_t *) malloc(capacity*sizeof(integer_t));
+    pair_sum *arr = (pair_sum*)malloc(capacity*sizeof(pair_sum));
     if ( arr == NULL){
         printf("Memory Error!");
     }
