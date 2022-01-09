@@ -87,10 +87,8 @@ int main(void)
       //brute_force_iterative(n,p,desired_sum,b);
       //hs(n,p,desired_sum,b);
       ss(n,p,desired_sum,b);
-      printf("%f ",cpu_time()-t);
-      
+      printf("%f ",cpu_time()-t); 
     }
-    printf("\n");
   
   }
   return 0;

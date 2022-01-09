@@ -179,89 +179,141 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
  
 ![[hs.png]]
 
-![[all_functions.png]]
+![[bf_and_hs.png]]
  
  ## Schroeppel and Shamir
  
- Este método é basedo num melhoramente feito por **Schroeppel and Shamir** que visa melhorar a complexidade temporal chegando á soma desejada após dividir a chave publica e calcular as suas somas, iterativamente.
+ **Este método é basedo num melhoramente feito por Schroeppel and Shamir que visa melhorar a complexidade espacial do metodo anterior**, calculando as subsomas dos arrays **lower** and **upper** iterativamente.
+ 
+ 
 
- Para calcularmos as somas iterativamente dividimos as chave publica em 4 e calculamos as subsomas desses arrays  (lwa,lwb;upa,upb), apartir dai escolhemos um dos arrays de cada metade para iterar as somas para uma heap (lwa,upa).
-
+ Inicialmente para calcularmos as somas iterativamente,vamos dividir as chave publica em 4 e calculamos as subsomas desses arrays  (lwa,lwb;upa,upb), sendo que apartir de agora em vez de termos 2 arrays de 2^(n/2)\*sizeof(integer_t) bytes temos 4 de apenas 2^(n/4)\*sizeof(integer_t).
+ 
  ```c
- void refill_lw_heap(long long int a,min_heap *lw_heap, integer_t *lwa , integer_t *lwb ,int size){
-  long long int ib;
-  for(ib=0;ib<(1LL << size);ib++){
-        //printf("%lld ",lwa[ia]+lwb[ib]);
-        add(lw_heap,(lwa[a]+lwb[ib]));
-  }
-  a++;
-}
-void refill_up_upper(long long int a,max_heap *up_heap, integer_t *upa , integer_t *upb ,int size){
-  long long int jb;
-  for(jb=(1<<size)-1;jb>-1;jb--){
-        //printf("%lld -> %d ",upa[ja]+upb[jb],jb);
-        add_max(up_heap,upa[a]+upb[jb]);
-  }
-  a--;
-}
- ```
+int n1 = n/2;
+int n1a = n1/2;
+int n1b = n1 - n1a;
+int n2 = n - n1;
+int n2a = n2/2;
+int n2b = n2 - n2a;
 
-Depois fazemos algo relativamente parecido ao hs com o algoritmo dos dois ponteiros e posteriormente usariamos o brute_force
+integer_t *lwa = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n1a));
+integer_t *lwb = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n1b));
+integer_t *upa = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2a));
+integer_t *upb = (integer_t*)malloc(sizeof(integer_t)*(1LL<<n2b));
 
-```c
- while(sum != desired_sum){
-	...
-
-	if(sum <  desired_sum){
-        j = poll_max(upper_heap);
-        sum = i+j;
-        j_idx--;
-        continue;
-      }
-      i = poll(lower_heap);
-      sum = i+j;
-      i_idx++;
+make_sums(n1a,p,lwa);
+make_sums(n1b,p+n1a,lwb);
+make_sums(n2a,p+(n1a+n1b),upa);
+make_sums(n2b,p+(n1a+n1b+n2a),upb);
+```
+ 
+ Para calcular e parcialmente amazernar as somas podemos ultilizar duas estruturas **heaps ou priority queues**.  
+ Em que para gerar as somas do **lower** e **upper** no metodo **hs**, iteramos os indices de **lwa** e **upa** por **lwb** **upb** para uma **min heap** e uma **max heap** ou uma **priority queue crescente** e uma **priority queue decrescente**, respétivamente. 
+ Começamos por preencher estas estruturas iterando pelo primeiro indice de **ia** e o ultimo de **ja** todo os arrays **b**.
+ 
+ ```c
+for(int ia=0;ia<(1LL << n1a);ia++){
+	pair_sum pair = {ia, 0, lwa[ia]+lwb[0]};
+	add(lower_heap, pair);
 }
 
-No entanto se a min ou max heap ficar sem elementos simplesmente damos um refill a relativa heap
-
-```c
-while(sum != desired_sum){
-      
-      if(upper_heap->size == 0){
-		refill_max(ja,upper_heap,upa,upb,n2b)
-        j = poll_max(upper_heap);
-        sum = i+j;
-        j_idx--;
-
-        continue;
-      }
-
-      if(lower_heap->size == 0){
-        refill_max(ia,lower_heap,lwa,lwb,n1b)
-        i = poll(lower_heap);
-        sum = i + j;
-        i_idx ++;
-        continue;
-      } 
-
-      if(sum <  desired_sum){
-        j = poll_max(upper_heap);
-        sum = i+j;
-        j_idx--;
-        continue;
-      }
-      i = poll(lower_heap);
-      sum = i+j;
-      i_idx++;
+for(int ja=0;ja<(1LL<<n2a);ja++){
+	pair_sum pair = {ja, (1LL<<n2b)-1, upa[ja]+upb[(1LL<<n2b)-1]};
+	add_max(upper_heap, pair);
 }
 ```
 
-Estando assim portanto a unicamente ultilizar 2 arrays de n/2^2\*sizeof(integer_t) bytes para apenas ultilizarmos 4 de n/4^2\*sizeof(integer_t) bytes e duas heaps que ocupam em conjunto 2*n/4^2\*sizeof(integer_t) bytes
+ Depois á medida que damos poll estraimos  novos pares **(ia,ib)** para calcular a soma e depois aumentando o **ib** caso a soma seja menor ,ou novos pares **(ja,jb)** diminuimos o **jb** caso a soma seja maior.
+ Cada vez que estraimos um par substituimos pelo seguinte até que se encontre a **desired_sum** ou acabem-se os pares.
+ Isto é algo parecido ao algoritmo dos dois ponteiros em **hs** mas aqui é dinamico.
+ 
+ ```c
+while(lower_heap->size != 0 && upper_heap->size != 0){
 
-\[\[insert graph here\]\]
+	i = peek(lower_heap);
 
-Como podemos ver este metodo chega a ser relativamente também um pouco mais eficiente em termos de tempo e se quisessemos poderiamos decriptar chaves com mais elementos que o hs devido a limitações de memória. 
+	j = peek_max(upper_heap);
+
+	sum = i.sum+j.sum;
+
+	if (sum == desired_sum) break;
+
+	if (sum < desired_sum){
+		poll(lower_heap);
+		if (i.b+1 < (1LL<<n1b)){
+			pair_sum pair = {i.a, i.b+1, lwa[i.a]+lwb[i.b+1]};
+			add(lower_heap, pair);
+		}
+	}
+	
+	if (sum > desired_sum){
+		poll_max(upper_heap);
+		if ((j.b-1) != -1){
+			pair_sum pair = {j.a, j.b-1, upa[j.a]+upb[j.b-1]};
+			add_max(upper_heap, pair);
+		}
+	}
+}
+```
+ 
+ Inicialmente tentamos por aplicar o metodo através de **heaps** no entanto não após de encontrar as subsomas certas não encontramos nenhuma maneira viavel de encontrar os indices referentes á soma em **lwa,lwb,upa,upb** pelo que semalhaça das **heaps com as priority queue** fizemos uma simples transformação, como é evidenciado pelo códico de origem ("if it works, dont touch it!!!") passando o array de ints das **heaps** para um array de uma estura chamada **pair_sum** que amazerna os **indices e a soma**, soma apartir da qual operamos a **"heap"**.
+ Além disso consultando o que pensamos ser o estudo original conduzido por [Schroeppel and Shamir](https://apps.dtic.mil/sti/pdfs/ADA080385.pdf), também são ultilizadas as **priority queues**.
+ 
+
+
+Depois assim com no **hs** recorremos ao brute_force_recursive para fazer os resto do trabalho.
+
+```c
+brute_force_recursive(n1a,p,lwa[i.a],0,0,b);
+brute_force_recursive(n1b,p+n1a,lwb[i.b],0,0,b+n1a);
+brute_force_recursive(n2a,p+(n1a+n1b),upa[j.a],0,0,b+(n1a+n1b));
+brute_force_recursive(n2a,p+(n1a+n1b+n2a),upb[j.b],0,0,b+(n1a+n1b+n2a));
+```
+
+O desempenho deste metodo segue a seguinte equação log temporal
+
+![[ss.png]]
+
+A o desenpenho deste algoritmo apesar de  ter como objétivo melhorar apenas a complexidade espacial chega a superar ligeiramente em complexidade temporal  o metodo **hs**
+
+![[ss and hs.png]]
+
+No entanto a verdadeira vantangem deste métedo é que pode ir a valores de **n** muito maiores devido ás limitações de memória do metodo de **Horowitz and Sahni**.
+
+---
+## Conclusão
+---
+
+Penso que neste estudo ficou claro que a metedologia com que abordamos um problema computacionalmente complexo pode afetar drasticamente o desenpenho da solução.
+
+![[all functions.png]]
+
+```txt
+bfrecursive -> m=0.6899559192527079 b = -19.447056305602256
+bfiterative -> m=0.7193673730963013 b = -17.64530981437745
+hs -> m=0.38767328582093785 b = -16.60737278635058
+ss -> m=0.3711995416075664 b = -16.191157005468522
+```
+
+Além disso ao estudar algoritmos relativamente antigos (mais velhos que todos neste grupo), apercebemo-nos que apesar diferentes linguagens e frameworks que vão aparecendo ao longo do tempo que revolucionam ou revolucionaram o mundo nas mais diferentes áreas do desenvolvimento de software, algoritmos  quando de qualidade são tão relevantes como sempre foram, podemos ver isso na pesquisa que fizemos a tentar encontrar pistas nomeadamente para o ultimo algoritmo onde a maioria dos resultados referiam-se não ao metodo em si, mas sim a um melhoramento relativamente recente.
+
+![[screenshot.jpg]]
+
+Todo o códico e documentação no desenvolvimento deste trabalho está no seguinte repositório no github.
+
+[Merkle_and_Hellman_decryptosystem](https://github.com/Tiag0-pt/Merkle_and_Hellman_decryptosystem)
+
+---
+## Bibliografia
+---
+
+A Hybrid Recursive Multi-Way Number Partitioning Algorithm - https://citeseerx.ist.psu.edu/viewdoc/download?rep=rep1&type=pdf&doi=10.1.1.208.2132
+
+Schroeppel and Shamir reshearch - https://apps.dtic.mil/sti/pdfs/ADA080385.pdf
+
+
+
  
  
  
