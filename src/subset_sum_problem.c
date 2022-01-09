@@ -82,13 +82,17 @@ int main(void)
     {
       integer_t desired_sum = all_subset_sum_problems[i].sums[j]; // the desired sum
       int b[n]; // array to record the solution
-      //applly_brute_force(n,p,desired_sum,b);
+
       t = cpu_time();
       //brute_force_iterative(n,p,desired_sum,b);
       //hs(n,p,desired_sum,b);
       ss(n,p,desired_sum,b);
-      printf("%f ",cpu_time()-t); 
+      printf("%f ",cpu_time()-t);
+
+      //t = applly_brute_force(n,p,desired_sum);
+      //printf("%f ",t);
     }
+    printf("\n");
   
   }
   return 0;
