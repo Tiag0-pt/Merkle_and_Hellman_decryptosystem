@@ -1,10 +1,10 @@
  --- 
  ## Introdução
  ---
- O sistema de enciptação Merkel-Hellman knapsack foi um dos primeiros sistemas de encriptação de chave publica a ser inventados sendo criado por Ralph Merkle and Martin Hellman em 1978.
- No entanto apesar do metodo ser mais simples que as normas establecidas anteriormente, foram rapidamente encontradas falhas no algoritmo.
+ O sistema de encriptação Merkel-Hellman knapsack foi um dos primeiros sistemas de encriptação de chave publica a ser inventados sendo criado por Ralph Merkle and Martin Hellman em 1978.
+ No entanto apesar do método ser mais simples que as normas estabelecidas anteriormente, foram rapidamente encontradas falhas no algoritmo.
  
- O metodo de encriptação deste algoritmo é assimétrico pelo que gera duas chaves, uma **publica** e outra **privada**.
+ O método de encriptação deste algoritmo é assimétrico pelo que gera duas chaves, uma **publica** e outra **privada**.
  
  Ex:
  >
@@ -59,18 +59,18 @@ Dado um array **B** de **n** bits o resultado da encriptação será um numero i
 # Desencriptação
 ---
 
-Numa situação normal, tendo acesso á chave privada usariamos uma algoritmo euclidiano em com um algoritmo ambisioso "greedy" para eficientemente resolvermos um problema de subsomas para chegar aos dados originais.
+Numa situação normal, tendo acesso à chave privada usariamos um algoritmo euclidiano em com um algoritmo ambicioso "greedy" para eficientemente resolvermos um problema de subsomas para chegar aos dados originais.
 
-No entanto neste projeto não nos é dada á chave privada, sendo o nosso objétivo criar e explorar as possiveis formas de apartir da chave publica chegar á privada documentando e estudando as complexidades computacionais (temporais e espaciais) dos diferentes metodos.
+No entanto neste projeto não nos é dada a chave privada, sendo o nosso objetivo criar e explorar as possíveis formas de a partir da chave pública chegar à privada documentando e estudando as complexidades computacionais (temporais e espaciais) dos diferentes métodos.
 
 ## Brute_Force
 
-Este implementação consiste em percorrer todas as somas possiveis iterativamente até encontarmos a soma correta. 
-Dada uma chave publica de **n** elementos o conjunto de subsomas possiveis a percorrer será **2^n**, pelo que ,teoricamente, a **Big O notation  será 2^n\*n ** sendo o ultimo n relativo ao ciclo for usado para confirmar a soma.
+Este implementação consiste em percorrer todas as somas possíveis iterativamente até encontrarmos a soma correta. 
+Dada uma chave publica de **n** elementos o conjunto de subsomas possíveis a percorrer será **2^n**, pelo que ,teoricamente, a **Big O notation  será 2^n\*n ** sendo o último n relativo ao ciclo for usado para confirmar a soma.
 
 ```c
 int brute_force_recursive(int n, integer_t p[n], integer_t desired_sum, int idx, integer_t partial_sum, int b[n]){
-// verifica valida cada bit dos dados encriptados comforme a soma parcial atá chegar á soma desejada
+// verifica valida cada bit dos dados encriptados conforme a soma parcial até chegar à soma desejada
 	int i;
 	if (partial_sum == desired_sum){
 		for (i = idx; i < n; i++){
@@ -127,7 +127,7 @@ int brute_force_iterative(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 
 ![[bfiterative.png]]
 
-Implementamos este metodo de duas formas, **recursivamente e iterativamente**, quando aplicado em geral o **metodo recursivo** quando verificando exprimentalmente é ligeiramente mais eficiente do que o método recursivo.
+Implementamos este método de duas formas, **recursivamente e iterativamente**, quando aplicado em geral o **método recursivo** quando verificado experimentalmente é ligeiramente mais eficiente do que o método recursivo.
 
 ![[bruteforce.png]]
 
@@ -137,9 +137,9 @@ Implementamos este metodo de duas formas, **recursivamente e iterativamente**, q
 
 ## Horowitz and Sahni
 
- Baseada no metodo desenvolvido por Ellis Horowitz e Sartaj Sahni para o problema de subsomas, esta implementação ao custo da memória acaba por ser mais efeciente que o **brute force** em termos temporais.
+ Baseada no método desenvolvido por Ellis Horowitz e Sartaj Sahni para o problema de subsomas, esta implementação ao custo da memória acaba por ser mais eficiente que o **brute force** em termos temporais.
  
- Aqui diminuimos o numero de somas a ser calculadas para **2\*2^(n/2)**, dividindo o array de forma relativamente parcial em duas partes, calculando as suas subsomas. Apartir das subsomas por um **metodo de ponteiros ascendente e descendente** sumando os dois valores dos ponteiros até chegarmos a soma desejada (ponteiro ascendente -> 1º array, ponteiro descendente -> 2º array), com o valor desses ponteiros aplicamos o anterior método **brute force** (recursivo) com o **array de subsomas, subarray e a subsoma** chegando assim á mensagem original.
+ Aqui diminuimos o numero de somas a ser calculadas para **2\*2^(n/2)**, dividindo o array de forma relativamente parcial em duas partes, calculando as suas subsomas. Apartir das subsomas por um **método de ponteiros ascendente e descendente** somando os dois valores dos ponteiros até chegarmos a soma desejada (ponteiro ascendente -> 1º array, ponteiro descendente -> 2º array), com o valor desses ponteiros aplicamos o anterior método **brute force** (recursivo) com o **array de subsomas, subarray e a subsoma** chegando assim á mensagem original.
  
 ```c
 void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
@@ -173,7 +173,7 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
 }
 ```
  
- Em termos de complexidade computacional temporal este algorimo terá **Big O notation ** de ** 4\*2^(n/2)\*n/2 ** (4 -> 2*O(n) de brute force) , ignorando as constantes , ** 2^(n/2)\*n/2**, que se confirma exprimentalmente.
+ Em termos de complexidade computacional temporal este algoritmo terá **Big O notation ** de ** 4\*2^(n/2)\*n/2 ** (4 -> 2*O(n) de brute force) , ignorando as constantes , ** 2^(n/2)\*n/2**, que se confirma experimentalmente.
  
  E em termos de complexidade computacional espacial este algoritmo terá **Big O notation** de **(2^n/2 \*2 )**.
  
@@ -183,7 +183,7 @@ void hs(int n,integer_t p[n],integer_t desired_sum,int b[n]){
  
  ## Schroeppel and Shamir
  
- **Este método é basedo num melhoramente feito por Schroeppel and Shamir que visa melhorar a complexidade espacial do metodo anterior**, calculando as subsomas dos arrays **lower** and **upper** iterativamente.
+ **Este método é baseado num melhoramento feito por Schroeppel and Shamir que visa melhorar a complexidade espacial do método anterior**, calculando as subsomas dos arrays **lower** and **upper** iterativamente.
  
  
 
@@ -208,9 +208,9 @@ make_sums(n2a,p+(n1a+n1b),upa);
 make_sums(n2b,p+(n1a+n1b+n2a),upb);
 ```
  
- Para calcular e parcialmente amazernar as somas podemos ultilizar duas estruturas **heaps ou priority queues**.  
- Em que para gerar as somas do **lower** e **upper** no metodo **hs**, iteramos os indices de **lwa** e **upa** por **lwb** **upb** para uma **min heap** e uma **max heap** ou uma **priority queue crescente** e uma **priority queue decrescente**, respétivamente. 
- Começamos por preencher estas estruturas iterando pelo primeiro indice de **ia** e o ultimo de **ja** todo os arrays **b**.
+ Para calcular e parcialmente armazenar as somas podemos utilizar duas estruturas **heaps ou priority queues**.  
+ Em que para gerar as somas do **lower** e **upper** no método **hs**, iteramos os índices de **lwa** e **upa** por **lwb** **upb** para uma **min heap** e uma **max heap** ou uma **priority queue crescente** e uma **priority queue decrescente**, respetivamente. 
+ Começamos por preencher estas estruturas iterando pelo primeiro índice de **ia** e o ultimo de **ja** todo os arrays **b**.
  
  ```c
 for(int ia=0;ia<(1LL << n1a);ia++){
@@ -224,9 +224,9 @@ for(int ja=0;ja<(1LL<<n2a);ja++){
 }
 ```
 
- Depois á medida que damos poll estraimos  novos pares **(ia,ib)** para calcular a soma e depois aumentando o **ib** caso a soma seja menor ,ou novos pares **(ja,jb)** diminuimos o **jb** caso a soma seja maior.
- Cada vez que estraimos um par substituimos pelo seguinte até que se encontre a **desired_sum** ou acabem-se os pares.
- Isto é algo parecido ao algoritmo dos dois ponteiros em **hs** mas aqui é dinamico.
+ Depois á medida que damos poll extraímos  novos pares **(ia,ib)** para calcular a soma e depois aumentando o **ib** caso a soma seja menor ,ou novos pares **(ja,jb)** diminuímos o **jb** caso a soma seja maior.
+ Cada vez que extraímos um par substituímos pelo seguinte até que se encontre a **desired_sum** ou acabem-se os pares.
+ Isto é algo parecido ao algoritmo dos dois ponteiros em **hs** mas aqui é dinâmico.
  
  ```c
 while(lower_heap->size != 0 && upper_heap->size != 0){
@@ -257,12 +257,12 @@ while(lower_heap->size != 0 && upper_heap->size != 0){
 }
 ```
  
- Inicialmente tentamos por aplicar o metodo através de **heaps** no entanto não após de encontrar as subsomas certas não encontramos nenhuma maneira viavel de encontrar os indices referentes á soma em **lwa,lwb,upa,upb** pelo que semalhaça das **heaps com as priority queue** fizemos uma simples transformação, como é evidenciado pelo códico de origem ("if it works, dont touch it!!!") passando o array de ints das **heaps** para um array de uma estura chamada **pair_sum** que amazerna os **indices e a soma**, soma apartir da qual operamos a **"heap"**.
+ Inicialmente tentámos aplicar o método através de **heaps** no entanto após não encontrar as subsomas certas não encontramos nenhuma maneira viável de encontrar os índices referentes á soma em **lwa,lwb,upa,upb**, pela semelhança das **heaps com as priority queue** fizemos uma simples transformação, como é evidenciado no código de origem ("if it works, dont touch it!!!") passando o array de ints das **heaps** para um array de uma estrutura chamada **pair_sum** que armazenar os **índices e a soma**, soma a partir da qual operamos a **"heap"**.
  Além disso consultando o que pensamos ser o estudo original conduzido por [Schroeppel and Shamir](https://apps.dtic.mil/sti/pdfs/ADA080385.pdf), também são ultilizadas as **priority queues**.
  
 
 
-Depois assim com no **hs** recorremos ao brute_force_recursive para fazer os resto do trabalho.
+Depois assim com no **hs** recorremos ao brute_force_recursive para fazer o resto do trabalho.
 
 ```c
 brute_force_recursive(n1a,p,lwa[i.a],0,0,b);
@@ -271,21 +271,21 @@ brute_force_recursive(n2a,p+(n1a+n1b),upa[j.a],0,0,b+(n1a+n1b));
 brute_force_recursive(n2a,p+(n1a+n1b+n2a),upb[j.b],0,0,b+(n1a+n1b+n2a));
 ```
 
-O desempenho deste metodo segue a seguinte equação log temporal
+O desempenho deste método segue a seguinte equação log temporal
 
 ![[ss.png]]
 
-A o desenpenho deste algoritmo apesar de  ter como objétivo melhorar apenas a complexidade espacial chega a superar ligeiramente em complexidade temporal  o metodo **hs**
+O desempenho deste algoritmo (apesar de ter como objetivo melhorar apenas a complexidade espacial) chega a superar ligeiramente em complexidade temporal  o método **hs**
 
 ![[ss and hs.png]]
 
-No entanto a verdadeira vantangem deste métedo é que pode ir a valores de **n** muito maiores devido ás limitações de memória do metodo de **Horowitz and Sahni**.
+No entanto a verdadeira vantagem deste método é que pode ir a valores de **n** muito maiores devido às limitações de memória do método de **Horowitz and Sahni**.
 
 ---
 ## Conclusão
 ---
 
-Penso que neste estudo ficou claro que a metedologia com que abordamos um problema computacionalmente complexo pode afetar drasticamente o desenpenho da solução.
+Penso que neste estudo ficou claro que a metodologia com que abordamos um problema computacionalmente complexo pode afetar drasticamente o desempenho da solução.
 
 ![[all functions.png]]
 
@@ -296,11 +296,11 @@ hs -> m=0.38767328582093785 b = -16.60737278635058
 ss -> m=0.3711995416075664 b = -16.191157005468522
 ```
 
-Além disso ao estudar algoritmos relativamente antigos (mais velhos que todos neste grupo), apercebemo-nos que apesar diferentes linguagens e frameworks que vão aparecendo ao longo do tempo que revolucionam ou revolucionaram o mundo nas mais diferentes áreas do desenvolvimento de software, algoritmos  quando de qualidade são tão relevantes como sempre foram, podemos ver isso na pesquisa que fizemos a tentar encontrar pistas nomeadamente para o ultimo algoritmo onde a maioria dos resultados referiam-se não ao metodo em si, mas sim a um melhoramento relativamente recente.
+Além disso ao estudar algoritmos relativamente antigos (mais velhos que todos neste grupo), apercebemo-nos que apesar diferentes linguagens e frameworks que vão aparecendo ao longo do tempo que revolucionam ou revolucionaram o mundo nas mais diferentes áreas do desenvolvimento de software, algoritmos  quando de qualidade são tão relevantes como sempre foram, podemos ver isso na pesquisa que fizemos a tentar encontrar pistas nomeadamente para o último algoritmo onde a maioria dos resultados referiam-se não ao método em si, mas sim a um melhoramento relativamente recente.
 
 ![[screenshot.jpg]]
 
-Todo o códico e documentação no desenvolvimento deste trabalho está no seguinte repositório no github.
+Todo o código e documentação no desenvolvimento deste trabalho está no seguinte repositório no github.
 
 [Merkle_and_Hellman_decryptosystem](https://github.com/Tiag0-pt/Merkle_and_Hellman_decryptosystem)
 
@@ -310,19 +310,4 @@ Todo o códico e documentação no desenvolvimento deste trabalho está no segui
 
 A Hybrid Recursive Multi-Way Number Partitioning Algorithm - https://citeseerx.ist.psu.edu/viewdoc/download?rep=rep1&type=pdf&doi=10.1.1.208.2132
 
-Schroeppel and Shamir reshearch - https://apps.dtic.mil/sti/pdfs/ADA080385.pdf
-
-
-
- 
- 
- 
- 
-
-
-
-
-
-
-
-
+Schroeppel and Shamir research - https://apps.dtic.mil/sti/pdfs/ADA080385.pdf
