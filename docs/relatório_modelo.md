@@ -304,6 +304,11 @@ Todo o código e documentação no desenvolvimento deste trabalho está no segui
 
 [Merkle_and_Hellman_decryptosystem](https://github.com/Tiag0-pt/Merkle_and_Hellman_decryptosystem)
 
+bin -> binários ultilizados
+docs -> dados de gráficos e documentos de auxilio e relatório
+src -> source code
+inc -> funções e estruturas auxiliares
+
 ---
 ## Bibliografia
 ---
